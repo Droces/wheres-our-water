@@ -1,6 +1,7 @@
 var map;
 var tile_layer;
 var vector_layer;
+var projection;
 
 (function() {
 
@@ -8,25 +9,30 @@ var vector_layer;
 
     map.setTarget('map');
 
-    var view = new ol.View({
-        center: [-33.951333, 18.559162],
-        zoom: 1 //9
-    })
-    map.setView(view);
-
     tile_layer = new ol.layer.Tile({
       // source: new ol.source.MapQuest({layer: 'osm'})
       source: make_map_source('Bing', [])
     })
     map.addLayer(tile_layer);
 
+    projection = tile_layer.getSource().getProjection();
+    // console.log('projection: ', projection);
+
+    var view = new ol.View({
+        center: [-33.951333, 18.559162],
+        zoom: 1, //9,
+        projection: projection
+    })
+    map.setView(view);
+    // console.log('map projection: ', map.getView().getProjection());
+
     create_features();
-    console.log('vector_layer: ', vector_layer);
+    // console.log('vector_layer: ', vector_layer);
 
     map.addLayer(vector_layer);
 
     var features_extent = vector_layer.getSource().getExtent();
-    console.log('features_extent: ', features_extent);
+    // console.log('features_extent: ', features_extent);
     map.getView().fit(features_extent);
 
 })();
@@ -38,7 +44,7 @@ function create_features() {
 
     var locations = [
         [18.559162, -33.951333],
-        [19.559162, -34.951333]
+        [18.477506, -34.097582]
     ];
 
     for (var i = locations.length - 1; i >= 0; i--) {
@@ -61,7 +67,7 @@ function create_features() {
     features.forEach(transform_geometry);
 
     var fill = new ol.style.Fill({
-      color: [180, 0, 0, 0.3]
+      color: [180, 0, 0, 0.7]
     });
      
     var stroke = new ol.style.Stroke({
@@ -73,7 +79,7 @@ function create_features() {
       image: new ol.style.Circle({
         fill: fill,
         stroke: stroke,
-        radius: 8
+        radius: 4
       }),
       fill: fill,
       stroke: stroke
@@ -84,9 +90,8 @@ function create_features() {
 
 function transform_geometry(element) {
     var current_projection = new ol.proj.Projection({code: "EPSG:4326"});
-    var new_projection = tile_layer.getSource().getProjection();
  
-    element.getGeometry().transform(current_projection, new_projection);
+    element.getGeometry().transform(current_projection, projection);
 }
 
 
@@ -113,7 +118,7 @@ function make_map_source(type, parameters) {
         // ordnanceSurvey     Ordnance Survey
 
         return new ol.source.BingMaps({
-          imagerySet: 'AerialWithLabels', // EPSG:3857
+          imagerySet: 'Aerial', // EPSG:3857
           key: 'Alv8UVrw4GpMxdqDyfVK8js_wa56fdUPFhZF7eUPSTiPVsry3kdyIQcr-U5upHIN'
         });
         break;
