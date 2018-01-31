@@ -62,6 +62,10 @@ function add_listeners() {
         var features = map.getFeaturesAtPixel(pixel);
         // console.log('features: ', features);
 
+        if (! features) {
+            return null;
+        }
+
         infoPanel.setAttribute('aria-expanded', 'true');
 
         // var popup = new ol.Overlay({
@@ -71,6 +75,8 @@ function add_listeners() {
         // popup.setPositioning('bottom-center');
         // popup.setOffset([0, -10]);
         // map.addOverlay(popup);
+
+        document.getElementById('info-panel-title').innerHTML = locationInfo[features[0].id].title;
     }, false);
 
 
@@ -99,6 +105,7 @@ function create_features() {
         if (locationInfo.hasOwnProperty(id)) {
             // console.log('locationInfo[id]: ', locationInfo[id]);
             var point_feature = new ol.Feature({ });
+            point_feature.id = id;
 
             var point_geom = new ol.geom.Point(
               locationInfo[id].coords
