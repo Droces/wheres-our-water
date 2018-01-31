@@ -6,8 +6,8 @@
     map.setTarget('map');
 
     var view = new ol.View({
-        center: [0, 0],
-        zoom: 1
+        center: [-33.951333, 18.559162],
+        zoom: 9
     })
     map.setView(view);
 
@@ -49,30 +49,6 @@ function make_map_source(type, parameters) {
           key: 'Alv8UVrw4GpMxdqDyfVK8js_wa56fdUPFhZF7eUPSTiPVsry3kdyIQcr-U5upHIN'
         });
         break;
-
-      case 'gbif':
-        // return new ol.source.TileImage({
-        //   tileUrlFunction: function(coordinate) {
-        //     var map_url = 'http://api.gbif.org/v1/map/density/tile'
-        //       + '?x=' + coordinate[0]
-        //       + '&y=' + coordinate[1]
-        //       + '&z=' + coordinate[2]
-        //       + '&type=' + 'TAXON'
-        //       + '&key=' + '3152198'
-        //       + '&resolution=' + '2'
-        //       // + '&palette=' + 'yellows_reds'
-        //     ;
-        //     console.log('map_url: ', map_url);
-        //     return map_url;
-        //   }
-        // });
-        return new ol.source.XYZ({
-          url: 'http://api.gbif.org/v1/map/density/tile?x={x}&y={y}&z={z}'
-            + '&type=' + 'TAXON'
-            + '&key=' + parameters[0]
-            + '&resolution=' + '2'
-            // + '&palette=' + 'yellows_reds'
-        });
 
       default:
         break;
