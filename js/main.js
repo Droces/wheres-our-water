@@ -4,6 +4,7 @@ var vector_layer;
 var projection;
 var infoPanel;
 var locationInfo;
+var locationsDataURL = 'http://localhost/wheresourwater/data/locations.json';
 
 (function() {
     setup_map();
@@ -11,6 +12,9 @@ var locationInfo;
     add_controls();
 
     add_listeners();
+
+    fetchLocationInfo();
+    
 })();
 
 
@@ -37,15 +41,6 @@ function setup_map() {
     })
     map.setView(view);
     // console.log('map projection: ', map.getView().getProjection());
-
-    create_features();
-    // console.log('vector_layer: ', vector_layer);
-
-    map.addLayer(vector_layer);
-
-    var features_extent = vector_layer.getSource().getExtent();
-    // console.log('features_extent: ', features_extent);
-    map.getView().fit(features_extent);
 }
 
 
@@ -65,7 +60,7 @@ function add_listeners() {
     document.getElementById("map").addEventListener("click", function( event ) {
         var pixel = map.getEventPixel(event);
         var features = map.getFeaturesAtPixel(pixel);
-        console.log('features: ', features);
+        // console.log('features: ', features);
 
         infoPanel.setAttribute('aria-expanded', 'true');
 
@@ -86,24 +81,36 @@ function add_listeners() {
 }
 
 
-function create_features() {
+function addFeatures() {
+    create_features();
 
+    map.addLayer(vector_layer);
+
+    var features_extent = vector_layer.getSource().getExtent();
+    // console.log('features_extent: ', features_extent);
+    map.getView().fit(features_extent);
+}
+
+
+function create_features() {
     var features = [];
 
-    var locations = [
-        [18.559162, -33.951333],
-        [18.477506, -34.097582]
-    ];
+    for (var id in locationInfo) {
+        if (locationInfo.hasOwnProperty(id)) {
+            // console.log('locationInfo[id]: ', locationInfo[id]);
+            var point_feature = new ol.Feature({ });
 
-    for (var i = locations.length - 1; i >= 0; i--) {
-        var point_feature = new ol.Feature({ });
+            var point_geom = new ol.geom.Point(
+              locationInfo[id].coords
+            );
+            point_feature.setGeometry(point_geom);
 
-        var point_geom = new ol.geom.Point(
-          locations[i]
-        );
-        point_feature.setGeometry(point_geom);
+            features.push(point_feature);
+        }
+    }
 
-        features.push(point_feature);
+    if (features.length == 0) {
+        throw 'No features';
     }
 
     vector_layer = new ol.layer.Vector({
@@ -178,20 +185,21 @@ function make_map_source(type, parameters) {
 
 
 function fetchLocationInfo() {
-    var URL = 'http://localhost/wheresourwater/locations.json';
-    getJSON(URL, function(err, data) {
+    getJSON(locationsDataURL, function(err, data) {
         if (err !== null) {
             alert('Something went wrong fetching the location data: ' + err);
+            return null;
         }
-        else {
-            console.log('locationInfo: ', locationInfo);
-            // locationInfo = data;
-        }
+
+        // console.log('data: ', data);
+        locationInfo = data;
+
+        addFeatures();
     });
 }
 
 
-function fetchJSON(url, callback) {
+function getJSON(url, callback) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.responseType = 'json';
@@ -200,7 +208,8 @@ function fetchJSON(url, callback) {
       var status = xhr.status;
       if (status === 200) {
         callback(null, xhr.response);
-      } else {
+      }
+      else {
         callback(status, xhr.response);
       }
     };
