@@ -3,6 +3,7 @@ var tile_layer;
 var vector_layer;
 var projection;
 var infoPanel;
+var locationInfo;
 
 (function() {
     setup_map();
@@ -173,4 +174,35 @@ function make_map_source(type, parameters) {
       default:
         break;
     }
+}
+
+
+function fetchLocationInfo() {
+    var URL = 'http://localhost/wheresourwater/locations.json';
+    getJSON(URL, function(err, data) {
+        if (err !== null) {
+            alert('Something went wrong fetching the location data: ' + err);
+        }
+        else {
+            console.log('locationInfo: ', locationInfo);
+            // locationInfo = data;
+        }
+    });
+}
+
+
+function fetchJSON(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'json';
+
+    xhr.onload = function() {
+      var status = xhr.status;
+      if (status === 200) {
+        callback(null, xhr.response);
+      } else {
+        callback(status, xhr.response);
+      }
+    };
+    xhr.send();
 }
