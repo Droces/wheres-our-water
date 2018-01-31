@@ -35,6 +35,23 @@ var projection;
     // console.log('features_extent: ', features_extent);
     map.getView().fit(features_extent);
 
+
+
+    // -------------------------------------------------------------------------
+
+    var fullscreen_control = new ol.control.FullScreen();
+    map.addControl(fullscreen_control);
+     
+    var zoom_slider_control = new ol.control.ZoomSlider();
+    map.addControl(zoom_slider_control);
+
+    var popup = new ol.Overlay({
+      element: document.getElementById('popup')
+    });
+    popup.setPosition(point_feature.getGeometry().getCoordinates());
+    popup.setPositioning('bottom-center');
+    popup.setOffset([0, -10]);
+    map.addOverlay(popup);
 })();
 
 
@@ -85,23 +102,6 @@ function create_features() {
       stroke: stroke
     });
     vector_layer.setStyle(style);
-
-
-    // -------------------------------------------------------------------------
-
-    var fullscreen_control = new ol.control.FullScreen();
-    map.addControl(fullscreen_control);
-     
-    var zoom_slider_control = new ol.control.ZoomSlider();
-    map.addControl(zoom_slider_control);
-
-    var popup = new ol.Overlay({
-      element: document.getElementById('popup')
-    });
-    popup.setPosition(point_feature.getGeometry().getCoordinates());
-    popup.setPositioning('bottom-center');
-    popup.setOffset([0, -10]);
-    map.addOverlay(popup);
 }
 
 
