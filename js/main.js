@@ -45,13 +45,19 @@ var projection;
     var zoom_slider_control = new ol.control.ZoomSlider();
     map.addControl(zoom_slider_control);
 
-    var popup = new ol.Overlay({
-      element: document.getElementById('popup')
-    });
-    popup.setPosition(point_feature.getGeometry().getCoordinates());
-    popup.setPositioning('bottom-center');
-    popup.setOffset([0, -10]);
-    map.addOverlay(popup);
+    document.getElementById("map").addEventListener("click", function( event ) {
+        var pixel = map.getEventPixel(event);
+        var features = map.getFeaturesAtPixel(pixel);
+        console.log('features: ', features);
+
+        var popup = new ol.Overlay({
+          element: document.getElementById('popup')
+        });
+        popup.setPosition(features[0].getGeometry().getCoordinates());
+        popup.setPositioning('bottom-center');
+        popup.setOffset([0, -10]);
+        map.addOverlay(popup);
+    }, false);
 })();
 
 
