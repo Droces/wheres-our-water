@@ -67,11 +67,11 @@ function create_features() {
     features.forEach(transform_geometry);
 
     var fill = new ol.style.Fill({
-      color: [180, 0, 0, 0.7]
+      color: [255, 255, 255, 1]
     });
      
     var stroke = new ol.style.Stroke({
-      color: [180, 0, 0, 1],
+      color: [220, 220, 220, 1],
       width: 1
     });
 
@@ -79,12 +79,29 @@ function create_features() {
       image: new ol.style.Circle({
         fill: fill,
         stroke: stroke,
-        radius: 4
+        radius: 6
       }),
       fill: fill,
       stroke: stroke
     });
     vector_layer.setStyle(style);
+
+
+    // -------------------------------------------------------------------------
+
+    var fullscreen_control = new ol.control.FullScreen();
+    map.addControl(fullscreen_control);
+     
+    var zoom_slider_control = new ol.control.ZoomSlider();
+    map.addControl(zoom_slider_control);
+
+    var popup = new ol.Overlay({
+      element: document.getElementById('popup')
+    });
+    popup.setPosition(point_feature.getGeometry().getCoordinates());
+    popup.setPositioning('bottom-center');
+    popup.setOffset([0, -10]);
+    map.addOverlay(popup);
 }
 
 
