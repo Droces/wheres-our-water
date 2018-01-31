@@ -12,7 +12,8 @@
         <!-- Place favicon.ico in the root directory -->
 
         <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="libraries/openlayers/ol.css">
+        <!-- <link rel="stylesheet" href="libraries/openlayers-dist/ol.css"> -->
+        <link rel="stylesheet" href="libraries/openlayers/css/ol.css">
         <link rel="stylesheet" href="css/main.css">
     </head>
     <body>
@@ -20,15 +21,26 @@
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
 
-        <h1>Where&rsquo;s Our Water</h1>
+        <header role="banner">
+            <h1>Where&rsquo;s Our Water</h1>
 
-        <div class="tabs">
-            <span class="active">Map</span>
-        </div>
+            <div class="tabs">
+                <span class="active">Map</span>
+            </div>
+        </header>
+        <main>
 
-        <div id="map" class="map"></div>
+            <div id="map" class="map"></div>
 
-        <div id="popup" class="popup">Info</div>
+            <div id="info-panel" class="info-panel" data-expanded="false">
+                <div role="presentation">
+                    <button role="close">&times;</button>
+                    Info
+                </div>
+            </div>
+        </main>
+
+
 
         <script src="js/vendor/modernizr-3.5.0.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>

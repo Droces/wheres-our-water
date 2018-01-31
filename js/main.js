@@ -2,8 +2,19 @@ var map;
 var tile_layer;
 var vector_layer;
 var projection;
+var infoPanel;
 
 (function() {
+    setup_map();
+
+    add_controls();
+
+    add_listeners();
+})();
+
+
+function setup_map() {
+    infoPanel = document.getElementById("info-panel");
 
     map = new ol.Map({ });
 
@@ -34,31 +45,44 @@ var projection;
     var features_extent = vector_layer.getSource().getExtent();
     // console.log('features_extent: ', features_extent);
     map.getView().fit(features_extent);
+}
 
 
-
-    // -------------------------------------------------------------------------
-
+function add_controls() {
     var fullscreen_control = new ol.control.FullScreen();
     map.addControl(fullscreen_control);
      
-    var zoom_slider_control = new ol.control.ZoomSlider();
-    map.addControl(zoom_slider_control);
+    // var zoom_slider_control = new ol.control.ZoomSlider();
+    // map.addControl(zoom_slider_control);
+     
+    var zoom_control = new ol.control.Zoom();
+    map.addControl(zoom_control);
+}
 
+
+function add_listeners() {
     document.getElementById("map").addEventListener("click", function( event ) {
         var pixel = map.getEventPixel(event);
         var features = map.getFeaturesAtPixel(pixel);
         console.log('features: ', features);
 
-        var popup = new ol.Overlay({
-          element: document.getElementById('popup')
-        });
-        popup.setPosition(features[0].getGeometry().getCoordinates());
-        popup.setPositioning('bottom-center');
-        popup.setOffset([0, -10]);
-        map.addOverlay(popup);
+        infoPanel.setAttribute('aria-expanded', 'true');
+
+        // var popup = new ol.Overlay({
+        //   element: document.getElementById('popup')
+        // });
+        // popup.setPosition(features[0].getGeometry().getCoordinates());
+        // popup.setPositioning('bottom-center');
+        // popup.setOffset([0, -10]);
+        // map.addOverlay(popup);
     }, false);
-})();
+
+
+    var closeButton = document.querySelectorAll('[role="close"]')[0];
+    closeButton.addEventListener("click", function( event ) {
+        infoPanel.setAttribute('aria-expanded', 'false');
+    }, false);
+}
 
 
 function create_features() {
