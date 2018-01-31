@@ -102,6 +102,10 @@ body {
     font-family: sans-serif;
     color: #4b4b4b;
 }
+a {
+    color: #386ecc;
+    text-decoration: none;
+}
 header {
     height: 110px;
     overflow: hidden;
@@ -121,15 +125,23 @@ h1,
 }
 .tabs {
     height: 50px;
+    display: flex;
+    justify-content: space-between;
 }
-.tabs span {
-    display: inline-block;
+.tabs > a {
+    /*display: inline-block;*/
+    flex: 0 1 auto;
     border-bottom: solid 4px transparent;
     padding: 0.5em 1.5em;
     text-transform: uppercase;
 }
 .tabs .active {
     border-bottom-color: #62a226;
+}
+.tabs span {
+    font-size: 0.6em;
+    display: flex;
+    align-items: center;
 }
 .map {
     height: calc(100vh - 110px);
@@ -155,9 +167,11 @@ h1,
     box-sizing: border-box;
     max-width: 45em;
     margin: 0 auto;
+    height: 100%;
+    overflow: auto;
 }
 .info-panel[aria-expanded="true"] {
-    height: 100px;
+    height: 50vh;
 }
 button[role="close"] {
     border: none;
