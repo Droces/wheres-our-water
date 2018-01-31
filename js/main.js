@@ -1,25 +1,93 @@
-// self executing function here
+var map;
+var tile_layer;
+var vector_layer;
+
 (function() {
 
-    var map = new ol.Map({ });
+    map = new ol.Map({ });
 
     map.setTarget('map');
 
     var view = new ol.View({
         center: [-33.951333, 18.559162],
-        zoom: 9
+        zoom: 1 //9
     })
     map.setView(view);
 
-    var tile_layer = new ol.layer.Tile({
+    tile_layer = new ol.layer.Tile({
       // source: new ol.source.MapQuest({layer: 'osm'})
       source: make_map_source('Bing', [])
     })
     map.addLayer(tile_layer);
 
-    map.getView().setZoom(2);
+    create_features();
+    console.log('vector_layer: ', vector_layer);
+
+    map.addLayer(vector_layer);
+
+    var features_extent = vector_layer.getSource().getExtent();
+    console.log('features_extent: ', features_extent);
+    map.getView().fit(features_extent);
 
 })();
+
+
+function create_features() {
+
+    var features = [];
+
+    var locations = [
+        [18.559162, -33.951333],
+        [19.559162, -34.951333]
+    ];
+
+    for (var i = locations.length - 1; i >= 0; i--) {
+        var point_feature = new ol.Feature({ });
+
+        var point_geom = new ol.geom.Point(
+          locations[i]
+        );
+        point_feature.setGeometry(point_geom);
+
+        features.push(point_feature);
+    }
+
+    vector_layer = new ol.layer.Vector({
+      source: new ol.source.Vector({
+        features: features
+      })
+    })
+
+    features.forEach(transform_geometry);
+
+    var fill = new ol.style.Fill({
+      color: [180, 0, 0, 0.3]
+    });
+     
+    var stroke = new ol.style.Stroke({
+      color: [180, 0, 0, 1],
+      width: 1
+    });
+
+    var style = new ol.style.Style({
+      image: new ol.style.Circle({
+        fill: fill,
+        stroke: stroke,
+        radius: 8
+      }),
+      fill: fill,
+      stroke: stroke
+    });
+    vector_layer.setStyle(style);
+}
+
+
+function transform_geometry(element) {
+    var current_projection = new ol.proj.Projection({code: "EPSG:4326"});
+    var new_projection = tile_layer.getSource().getProjection();
+ 
+    element.getGeometry().transform(current_projection, new_projection);
+}
 
 
 /**
