@@ -1,7 +1,11 @@
 {
-  "l1": {
-    "title": "Location 1",
-    "coords": [18.559162, -33.951333]
+  "bhs": {
+    "title": "Bergvliet High School",
+    "coords": [18.453199, -34.040807],
+    "address": "Firgrove Way, Bergvliet, Cape Town, 7806",
+    "nu_taps": 60,
+    "nu_citizens": 10000,
+    "parking": "Parking will be available along Firgrove Road, and on the BHS campus grounds."
   },
   "l2": {
     "title": "Location 2",

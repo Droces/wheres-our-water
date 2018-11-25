@@ -116,6 +116,12 @@ h1 {
     padding-top: 0.3em;
     height: 60px;
     box-sizing: border-box;
+    font-size: 1.3em;
+}
+@media screen and (min-width: 450px) {
+    h1 {
+        font-size: 1.45em;
+    }
 }
 h1,
 .tabs {
@@ -139,6 +145,7 @@ h1,
     border-bottom-color: #62a226;
 }
 .tabs span {
+    padding: 0.5em 1.5em;
     font-size: 0.6em;
     display: flex;
     align-items: center;
@@ -181,6 +188,9 @@ button[role="close"] {
     right: 0px;
     font-weight: bold;
     font-size: 1.5em;
+    background: white;
+    border: solid 1px #dbdbdb;
+    border-width: 0 0 1px 1px;
 }
 
 

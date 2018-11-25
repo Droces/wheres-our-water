@@ -36,7 +36,9 @@ function setup_map() {
 
     var view = new ol.View({
         center: [-33.951333, 18.559162],
-        zoom: 1, //9,
+        zoom: 9,
+        maxZoom: 18,
+        minZoom: 9,
         projection: projection
     })
     map.setView(view);
@@ -68,15 +70,17 @@ function add_listeners() {
 
         infoPanel.setAttribute('aria-expanded', 'true');
 
-        // var popup = new ol.Overlay({
-        //   element: document.getElementById('popup')
-        // });
-        // popup.setPosition(features[0].getGeometry().getCoordinates());
-        // popup.setPositioning('bottom-center');
-        // popup.setOffset([0, -10]);
-        // map.addOverlay(popup);
+        var title = locationInfo[features[0].id].title;
+        infoPanel.getElementsByClassName('info-panel-title')[0]
+            .innerHTML = title;
 
-        document.getElementById('info-panel-title').innerHTML = locationInfo[features[0].id].title;
+        var nu_taps = locationInfo[features[0].id].nu_taps;
+        // console.log('nu_taps: ', nu_taps);
+        if (typeof nu_taps === 'undefined') {
+            nu_taps = '<em>unknown</em>';
+        }
+        infoPanel.getElementsByClassName('nu_taps')[0].getElementsByTagName('p')[0]
+            .innerHTML = nu_taps;
     }, false);
 
 
@@ -129,11 +133,11 @@ function create_features() {
     features.forEach(transform_geometry);
 
     var fill = new ol.style.Fill({
-      color: [255, 255, 255, 1]
+      color: '#00c0ff' // pale blue
     });
      
     var stroke = new ol.style.Stroke({
-      color: [220, 220, 220, 1],
+      color: '#00c0ff',
       width: 1
     });
 
@@ -159,14 +163,29 @@ function transform_geometry(element) {
 
 /**
  * @param string type
- * @param array parameters
+ * @param string version
  */
-function make_map_source(type, parameters) {
+function make_map_source(type, version) {
     // console.log('type: ', type);
+    version = 'wikimedia';
+
     switch (type) {
       case 'OSM':
+          // See https://wiki.openstreetmap.org/wiki/Tile_servers
+          
         // MapQuest Open Street Maps
-        return new ol.source.MapQuest({layer: 'osm'});
+        // return new ol.source.MapQuest({layer: 'osm'});
+        var source = new ol.source.OSM({});
+        // switch (version) {
+        //     case 'wikimedia':
+        //         source.setUrl('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png');
+        //         break
+        //     case 'humanitarian':
+        //         source.setUrl('http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png');
+        // }
+        // source.setUrl('http://{a-c}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png');
+        // source.setUrl('//tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png');
+        return source;
         break;
 
       case 'Bing':
