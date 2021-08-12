@@ -36,9 +36,9 @@ function setup_map() {
 
     var view = new ol.View({
         center: [-33.951333, 18.559162],
-        zoom: 9,
+        zoom: 2, // 9,
         maxZoom: 18,
-        minZoom: 9,
+        minZoom: 2, // 9,
         projection: projection
     })
     map.setView(view);
